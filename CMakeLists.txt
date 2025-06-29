@@ -24,6 +24,7 @@ add_executable(jit_example ${CMAKE_CURRENT_SOURCE_DIR}/src/jit_example.cpp)
 add_executable(llvm_example ${CMAKE_CURRENT_SOURCE_DIR}/src/fibonacci.cpp)
 add_executable(jit_example2 ${CMAKE_CURRENT_SOURCE_DIR}/src/jit.cpp)
 add_executable(orcjit_example ${CMAKE_CURRENT_SOURCE_DIR}/src/orcjit.cpp)
+add_executable(llvmdis_example ${CMAKE_CURRENT_SOURCE_DIR}/src/llvmdis.cpp)
 llvm_map_components_to_libnames(llvm_libs all support core irreader executionengine mc mcjit interpreter nativecodegen ipo x86asmparser native)
 
 add_custom_command(TARGET bitcode_example
@@ -36,11 +37,11 @@ add_custom_command(TARGET jit_example2
 		    COMMAND clang++ -O1 -emit-llvm ${CMAKE_CURRENT_SOURCE_DIR}/sum.cpp -c -o sum.bc 
 		    VERBATIM
 		    )
-#add_custom_command(TARGET jit_cmake
-#		    POST_BUILD
-#		    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/cfib.bc ${CMAKE_CURRENT_SOURCE_DIR}/build 
-#		    VERBATIM
-#		    )
+# add_custom_command(TARGET jit_cmake
+# 		    POST_BUILD
+# 		    COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_CURRENT_SOURCE_DIR}/cfib.bc ${CMAKE_CURRENT_SOURCE_DIR}/build 
+# 		    VERBATIM
+# 		    )
 
 target_link_libraries(bitcode_example PUBLIC ${llvm_libs})
 target_link_libraries(pass_example PUBLIC ${llvm_libs})
@@ -49,3 +50,5 @@ target_link_libraries(jit_example PUBLIC ${llvm_libs})
 target_link_libraries(jit_example2 PUBLIC ${llvm_libs})
 target_link_libraries(llvm_example PUBLIC ${llvm_libs})
 target_link_libraries(orcjit_example PUBLIC ${llvm_libs})
+target_link_libraries(llvmdis_example PUBLIC ${llvm_libs})
+
