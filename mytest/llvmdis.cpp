@@ -64,10 +64,7 @@ struct LLVMDisassembler
         raw_string_ostream out(buf);
         MCInst in;
         uint64_t sz;
-        llvm::MCDisassembler::DecodeStatus result = 
-            di->getInstruction(in, sz, data.slice(offset), offset, out);
-        printf("result= %d\n", result);
-        while (offset < data.size() && result)
+        while (offset < data.size() && di->getInstruction(in, sz, data.slice(offset), offset, out))
         {
             format_hex(out, data, offset, sz);
             ip->printInst(&in, offset, "", *si, out);
@@ -96,7 +93,9 @@ int main(int argc, char **argv)
     InitializeAllDisassemblers();
 
     const uint8_t insn[] = {
-        0x6f, 0x00, 0x00, 0x20
+        0x6f, 0x00, 0x00, 0x20, // j	512
+        0x73, 0x11, 0x01, 0x34, // csrrw	sp, mscratch, sp
+        0x63, 0x0C, 0x01, 0x1a, // beqz	sp, 440
     };
 
     LLVMDisassembler dis("riscv64", "", "");
